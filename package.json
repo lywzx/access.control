@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --reporter spec",
+    "build": "tsc"
   },
   "keywords": [
     "access",
@@ -22,6 +23,8 @@
   "homepage": "https://github.com/lywzx/access.control#readme",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
     "tslint": "^5.16.0",
     "typescript": "^3.4.5"
   }
