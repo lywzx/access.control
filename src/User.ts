@@ -3,38 +3,16 @@ import {
     Role as RoleType
 } from "./types/Role";
 import {
-    isArray,
-    isObject,
+    RoleTypes,
+    Post
+} from './types/Types';
+import {
     isString,
-    flatten,
-    some
+    some,
+    every
 } from 'lodash';
-
-
-type RoleTypes = string | string[] | RoleType | RoleType[] | Role | Role[];
-type Post<T> = {
-    [P in keyof T]: number
-}
-
-const getRole = function(role: RoleTypes, permission: string[] = []): Role[] {
-    let ret: Role[] = [];
-    if (isString(role)) {
-        ret = [new Role(role, permission)];
-    } else if (role instanceof Role) {
-        ret = [role];
-    } else if (isObject(role) && isString((<RoleType> role).role)) {
-        let r = <RoleType> role;
-        ret = [new Role(r.role, r.permission || [])]
-    } else if (isArray(role)) {
-        let r =  role as [string, RoleType, Role];
-        ret = flatten(r.map(function (item: string|RoleType|Role): Role[] {
-            return getRole(item);
-        }));
-    }
-
-    return ret;
-};
-
+import { getRole, hasPermission } from "./Util";
+import { AbilityOptions } from "./types/AbilityOptions";
 
 
 class User {
@@ -45,12 +23,12 @@ class User {
 
     protected userId: number | undefined;
 
-    constructor( role: string);
     constructor( role: Role);
     constructor( role: RoleType);
     constructor( role: string[]);
     constructor( role: Role[]);
     constructor( role: RoleType[] );
+    constructor( role: string, permission?: string[]);
     constructor( role: RoleTypes = 'guest', permission?: string[], userId?: number) {
         let permi: string[] = permission || [];
         this.userId = userId;
@@ -58,7 +36,6 @@ class User {
         // this.setRole(role, permi);
         this.permission = permi;
     }
-
 
 
     public setRole(role: Role): void;
@@ -71,27 +48,112 @@ class User {
         this.role = getRole(role, permission);
     }
 
-    public hasRole(role: string|string[]): boolean {
+    /**
+     *
+     * @param {string | string[]} role
+     * @param {boolean} requiredAll
+     * @returns {boolean}
+     */
+    public hasRole(role: string|string[], requiredAll:boolean = false): boolean {
         let r:string[] = [];
-        if (typeof role === 'string') {
-            r = [role];
+        if (isString(role)) {
+            r = role.split('|');
+        } else {
+            r = role;
         }
-        return some(r, (value: string) => {
+
+        return (requiredAll ? every : some)(r, (value: string) => {
             return some(this.role, (rol: Role)=> rol.is(value));
         });
     }
 
 
-    public owns<K extends keyof Post<string>>(post: Post<string>, key: K) {
+    /**
+     *
+     * @param {Post<string>} post
+     * @param {K} key
+     * @returns {boolean}
+     */
+    public owns<K extends keyof Post<string>>(post: Post<string>, key: K): boolean {
         return post[key] === this.userId;
     }
 
-    public canAndOwns() {
+    /**
+     *
+     * @param {string | string[]} permission
+     * @param {boolean} requiredAll
+     * @returns {boolean}
+     */
+    public can(permission: string|string[], requiredAll:boolean = false):boolean {
+        let permissions: string[] = [];
+        if (isString(permission)) {
+            permissions = permission.split('|');
+        } else {
+            permissions = permission;
+        }
 
+        return (requiredAll ? every : some)(permissions, (permission)=>{
+            if (permission.indexOf('.') !== -1) {
+                let [role, per] = permission.split('.');
+
+                if (role !== '*' || per !== '*') {
+                    return some(this.role, (r) => {
+                        let result = true;
+                        if (role !== '*') {
+                            result = result && r.is(role);
+                        }
+                        if (per !== '*' && result) {
+                            result = result && r.can(per);
+                        }
+                        return result;
+                    });
+                }
+            }
+            return hasPermission(this.permission, permission) || some(this.role, (r)=> r.can(permission));
+        });
     }
 
+    /**
+     *
+     * @param {string | string[]} permission
+     * @param {boolean} requiredAll
+     * @returns {boolean}
+     */
+    public hasPermission(permission: string|string[], requiredAll:boolean = false):boolean {
+        return this.can(permission, requiredAll);
+    }
 
-    public ability() {
+    /**
+     *
+     * @param {string | string[]} permission
+     * @param {boolean} requiredAll
+     * @returns {boolean}
+     */
+    public isAbleTo(permission: string|string[], requiredAll:boolean = false):boolean {
+        return this.can(permission, requiredAll);
+    }
+
+    /**
+     *
+     * @param {string | string[]} permission
+     * @param {Post<string>} post
+     * @param {K} key
+     * @returns {boolean}
+     */
+    public canAndOwns<K extends keyof Post<string>>(permission: string|string[], post: Post<string>, key: K):boolean {
+        return this.can(permission) && this.owns(post, key);
+    }
+
+    /**
+     *
+     * @param {string | string[]} roles
+     * @param {string | string[]} permission
+     * @param {Partial<AbilityOptions>} options
+     */
+    public ability(roles: string|string[], permission: string|string[], options: Partial<AbilityOptions> = {
+        validate_all: false,
+        return_type: 'both'
+    }) {
 
     }
 
