@@ -6,7 +6,7 @@ import {
     flatten,
     trim
 } from "lodash";
-import { RoleTypes } from "./types/Types";
+import { RoleTypes, StringArray, StringOrStringArray } from "./types/Types";
 import Role from "./Role";
 import { Role as RoleType } from "./types/Role";
 
@@ -67,3 +67,15 @@ export const getRole = function(role: RoleTypes, permission: string[] = []): Rol
 
     return ret;
 };
+
+/**
+ *
+ * @param {StringOrStringArray} $value
+ * @returns {StringArray}
+ */
+export const standardize = function (value: StringOrStringArray): StringArray {
+    if ( isString(value) ) {
+        return value.split('|');
+    }
+    return value;
+}

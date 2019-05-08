@@ -3,33 +3,45 @@ import {
     Role as RoleType
 } from "./types/Role";
 import {
+    AbilityOptions, MapKeyStringValueBoolean,
+    RoleAndOwnsOptions,
     RoleTypes,
-    Post
+    StringArray,
+    StringOrStringArray
 } from './types/Types';
 import {
     isString,
     some,
     every
 } from 'lodash';
-import { getRole, hasPermission } from "./Util";
-import { AbilityOptions } from "./types/AbilityOptions";
-
+import { getRole, hasPermission, standardize } from "./Util";
+import { Post } from "./types/Post";
 
 class User {
 
+    /**
+     *
+     * @type {Role[]} current has roles
+     */
     protected role: Role[] = [];
 
-    protected permission: string[] = [];
+    /**
+     * @type {string[]} current has permissions
+     */
+    protected permission: StringArray = [];
 
+    /**
+     * @type {number|undefined} current login user id
+     */
     protected userId: number | undefined;
 
     constructor( role: Role);
     constructor( role: RoleType);
-    constructor( role: string[]);
+    constructor( role: StringArray);
     constructor( role: Role[]);
     constructor( role: RoleType[] );
-    constructor( role: string, permission?: string[]);
-    constructor( role: RoleTypes = 'guest', permission?: string[], userId?: number) {
+    constructor( role: string, permission?: StringArray);
+    constructor( role: RoleTypes = 'guest', permission?: StringArray, userId?: number) {
         let permi: string[] = permission || [];
         this.userId = userId;
         // TODO resolve error
@@ -40,7 +52,7 @@ class User {
 
     public setRole(role: Role): void;
     public setRole(role: RoleType): void;
-    public setRole(role: string[]): void;
+    public setRole(role: StringArray): void;
     public setRole(role: Role[]): void;
     public setRole(role: RoleType[]): void;
     public setRole(role: string, permission?: string[]): void;
@@ -54,7 +66,7 @@ class User {
      * @param {boolean} requiredAll
      * @returns {boolean}
      */
-    public hasRole(role: string|string[], requiredAll:boolean = false): boolean {
+    public hasRole(role: StringOrStringArray, requiredAll:boolean = false): boolean {
         let r:string[] = [];
         if (isString(role)) {
             r = role.split('|');
@@ -69,12 +81,11 @@ class User {
 
 
     /**
-     *
-     * @param {Post<string>} post
-     * @param {K} key
+     * @param {Post} post
+     * @param {string} key
      * @returns {boolean}
      */
-    public owns<K extends keyof Post<string>>(post: Post<string>, key: K): boolean {
+    public owns(post: Post, key: string = 'user_id'): boolean {
         return post[key] === this.userId;
     }
 
@@ -84,7 +95,7 @@ class User {
      * @param {boolean} requiredAll
      * @returns {boolean}
      */
-    public can(permission: string|string[], requiredAll:boolean = false):boolean {
+    public can(permission: StringOrStringArray, requiredAll:boolean = false):boolean {
         let permissions: string[] = [];
         if (isString(permission)) {
             permissions = permission.split('|');
@@ -109,7 +120,8 @@ class User {
                     });
                 }
             }
-            return hasPermission(this.permission, permission) || some(this.role, (r)=> r.can(permission));
+            return hasPermission(this.permission, permission) ||
+                some(this.role, (r)=> r.can(permission));
         });
     }
 
@@ -119,7 +131,7 @@ class User {
      * @param {boolean} requiredAll
      * @returns {boolean}
      */
-    public hasPermission(permission: string|string[], requiredAll:boolean = false):boolean {
+    public hasPermission(permission: StringOrStringArray, requiredAll:boolean = false):boolean {
         return this.can(permission, requiredAll);
     }
 
@@ -129,32 +141,94 @@ class User {
      * @param {boolean} requiredAll
      * @returns {boolean}
      */
-    public isAbleTo(permission: string|string[], requiredAll:boolean = false):boolean {
+    public isAbleTo(permission: StringOrStringArray, requiredAll:boolean = false):boolean {
         return this.can(permission, requiredAll);
     }
 
     /**
      *
-     * @param {string | string[]} permission
-     * @param {Post<string>} post
-     * @param {K} key
+     * @param {StringOrStringArray} permissions
+     * @param {Post} post
+     * @param {RoleAndOwnsOptions} options
      * @returns {boolean}
      */
-    public canAndOwns<K extends keyof Post<string>>(permission: string|string[], post: Post<string>, key: K):boolean {
-        return this.can(permission) && this.owns(post, key);
+    public canAndOwns(permissions: StringOrStringArray, post: Post, options: RoleAndOwnsOptions):boolean {
+        return this.can(permissions) && this.owns(post, options.foreignKeyName);
     }
 
     /**
      *
-     * @param {string | string[]} roles
-     * @param {string | string[]} permission
-     * @param {Partial<AbilityOptions>} options
+     * @param {StringOrStringArray} roles
+     * @param {Post} post
+     * @param {RoleAndOwnsOptions} options
+     * @returns {boolean}
      */
-    public ability(roles: string|string[], permission: string|string[], options: Partial<AbilityOptions> = {
+    public hasRoleAndOwns(roles: StringOrStringArray, post: Post, options: RoleAndOwnsOptions = {
+        requireAll: false,
+        foreignKeyName: 'user_id'
+    }) {
+        return this.hasRole(roles) && this.owns(post, options.foreignKeyName);
+    }
+
+
+    /**
+     *
+     * @param {StringOrStringArray} roles
+     * @param {StringOrStringArray} permissions
+     * @param {AbilityOptions} options
+     */
+    public ability(roles: StringOrStringArray, permissions: StringOrStringArray, options: AbilityOptions = {
         validate_all: false,
         return_type: 'both'
-    }) {
+    }): boolean| {
+        validateAll?: boolean;
+        roles: MapKeyStringValueBoolean,
+        permissions: MapKeyStringValueBoolean
+    } {
+        if ( options.return_type === 'boolean') {
+            let hasRole = this.hasRole(roles, options.validate_all);
+            let hasPermissions = this.hasPermission(permissions, options.validate_all);
 
+            return options.validate_all ? hasRole && hasPermissions : hasRole || hasPermissions;
+        }
+
+
+        let rs = standardize(roles);
+        let ps = standardize(permissions);
+
+        let checkedRoles:MapKeyStringValueBoolean = {};
+        for (let role of rs) {
+            checkedRoles[role] = this.hasRole(role);
+        }
+        let checkedPermissions: MapKeyStringValueBoolean = {};
+        for (let permission of ps) {
+            checkedPermissions[permission] = this.hasPermission(permission);
+        }
+
+        // If validate all and there is a false in either.
+        // Check that if validate all, then there should not be any false.
+        // Check that if not validate all, there must be at least one true.
+        let validateAll:boolean;
+        let checkFn = (item: any) => (item === false);
+        if ((options.validate_all && !(some(checkedRoles, checkFn) || some(checkedPermissions, checkFn))) || (!options.validate_all && (some(checkedRoles) || some(checkedPermissions)))) {
+            validateAll = true;
+        } else {
+            validateAll = false;
+        }
+
+        // Return based on option.
+        if (options.return_type === 'array') {
+            return {
+                'roles': checkedRoles,
+                'permissions': checkedPermissions
+            };
+        }
+
+        return {
+            'validateAll': validateAll,
+            'roles': checkedRoles,
+            'permissions': checkedPermissions
+        }
     }
 
 }
