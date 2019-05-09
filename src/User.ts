@@ -1,8 +1,5 @@
 import Role from "./Role";
 import {
-    Role as RoleType
-} from "./types/Role";
-import {
     AbilityOptions, MapKeyStringValueBoolean,
     RoleAndOwnsOptions,
     RoleTypes,
@@ -35,27 +32,26 @@ class User {
      */
     protected userId: number | undefined;
 
-    constructor( role: Role);
-    constructor( role: RoleType);
-    constructor( role: StringArray);
-    constructor( role: Role[]);
-    constructor( role: RoleType[] );
-    constructor( role: string, permission?: StringArray);
+
+    /**
+     *
+     * @param {RoleTypes} role
+     * @param {StringArray} permission
+     * @param {number} userId
+     */
     constructor( role: RoleTypes = 'guest', permission?: StringArray, userId?: number) {
         let permi: string[] = permission || [];
         this.userId = userId;
-        // TODO resolve error
-        // this.setRole(role, permi);
+        this.setRole(role, permi);
         this.permission = permi;
     }
 
 
-    public setRole(role: Role): void;
-    public setRole(role: RoleType): void;
-    public setRole(role: StringArray): void;
-    public setRole(role: Role[]): void;
-    public setRole(role: RoleType[]): void;
-    public setRole(role: string, permission?: string[]): void;
+    /**
+     *
+     * @param {RoleTypes} role
+     * @param {string[]} permission
+     */
     public setRole(role: RoleTypes, permission?: string[]):void {
         this.role = getRole(role, permission);
     }

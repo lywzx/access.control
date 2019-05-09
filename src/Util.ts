@@ -51,9 +51,15 @@ export const hasPermission = function (exists_permission: string[], permission: 
  */
 export const getRole = function(role: RoleTypes, permission: string[] = []): Role[] {
     let ret: Role[] = [];
-    if (isString(role)) {
-        ret = [new Role(role, permission)];
-    } else if (role instanceof Role) {
+    if (isString(role) ) {
+        if (role.indexOf('|') === -1) {
+            ret = [new Role(role, permission)];
+        } else {
+            role = role.split('|');
+        }
+    }
+
+    if (role instanceof Role) {
         ret = [role];
     } else if (isObject(role) && isString((<RoleType> role).role)) {
         let r = <RoleType> role;
@@ -70,7 +76,7 @@ export const getRole = function(role: RoleTypes, permission: string[] = []): Rol
 
 /**
  *
- * @param {StringOrStringArray} $value
+ * @param {StringOrStringArray} value
  * @returns {StringArray}
  */
 export const standardize = function (value: StringOrStringArray): StringArray {
