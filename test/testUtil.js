@@ -50,7 +50,7 @@ describe('test `Util.getRole` fn', function() {
         expect(Util.getRole([role])).have.lengthOf(1).property(0).instanceOf(Role).property('role').to.be.equal('administrator');
     });
 
-    it('role with permission', function() {
+    it('roles with permissions', function() {
         let roles = Util.getRole('administrator', ['edit', 'publish']);
         expect(roles).have.length(1).property(0).include({
             role: 'administrator'

@@ -1,6 +1,6 @@
 
 export interface Role {
     role: string,
-    permission?: string[]
+    permissions?: string[]
 }
 

@@ -63,7 +63,7 @@ export const getRole = function(role: RoleTypes, permission: string[] = []): Rol
         ret = [role];
     } else if (isObject(role) && isString((<RoleType> role).role)) {
         let r = <RoleType> role;
-        ret = [new Role(r.role, r.permission || [])]
+        ret = [new Role(r.role, r.permissions || [])]
     } else if (isArray(role)) {
         let r =  role as [string, RoleType, Role];
         ret = flatten(r.map(function (item: string|RoleType|Role): Role[] {

@@ -15,22 +15,29 @@ import { getRole, hasPermission, standardize } from "./Util";
 import { Post } from "./types/Post";
 
 class User {
+    get userId(): number | undefined {
+        return this._userId;
+    }
+
+    set userId(value: number | undefined) {
+        this._userId = value;
+    }
 
     /**
      *
      * @type {Role[]} current has roles
      */
-    protected role: Role[] = [];
+    protected roles: Role[] = [];
 
     /**
      * @type {string[]} current has permissions
      */
-    protected permission: StringArray = [];
+    protected permissions: StringArray = [];
 
     /**
      * @type {number|undefined} current login user id
      */
-    protected userId: number | undefined;
+    private _userId: number | undefined;
 
 
     /**
@@ -40,10 +47,13 @@ class User {
      * @param {number} userId
      */
     constructor( role: RoleTypes = 'guest', permission?: StringArray, userId?: number) {
-        let permi: string[] = permission || [];
-        this.userId = userId;
-        this.setRole(role, permi);
-        this.permission = permi;
+        if (isString(role)) {
+            this.setRole(role, permission);
+        } else {
+            this.setRole(role);
+            this.permissions = permission || [];
+        }
+        this._userId = userId;
     }
 
 
@@ -53,9 +63,17 @@ class User {
      * @param {string[]} permission
      */
     public setRole(role: RoleTypes, permission?: string[]):void {
-        this.role = getRole(role, permission);
+        this.roles = getRole(role, permission);
     }
 
+    /**
+     *
+     * @param {RoleTypes} role
+     * @param {string[]} permission
+     */
+    public appendRole(role: RoleTypes, permission?: string[]): void {
+        this.roles = this.roles.concat(getRole(role, permission));
+    }
     /**
      *
      * @param {string | string[]} role
@@ -71,7 +89,7 @@ class User {
         }
 
         return (requiredAll ? every : some)(r, (value: string) => {
-            return some(this.role, (rol: Role)=> rol.is(value));
+            return some(this.roles, (rol: Role)=> rol.is(value));
         });
     }
 
@@ -82,7 +100,7 @@ class User {
      * @returns {boolean}
      */
     public owns(post: Post, key: string = 'user_id'): boolean {
-        return post[key] === this.userId;
+        return post[key] === this._userId;
     }
 
     /**
@@ -104,7 +122,7 @@ class User {
                 let [role, per] = permission.split('.');
 
                 if (role !== '*' || per !== '*') {
-                    return some(this.role, (r) => {
+                    return some(this.roles, (r) => {
                         let result = true;
                         if (role !== '*') {
                             result = result && r.is(role);
@@ -116,8 +134,8 @@ class User {
                     });
                 }
             }
-            return hasPermission(this.permission, permission) ||
-                some(this.role, (r)=> r.can(permission));
+            return hasPermission(this.permissions, permission) ||
+                some(this.roles, (r)=> r.can(permission));
         });
     }
 
@@ -148,8 +166,11 @@ class User {
      * @param {RoleAndOwnsOptions} options
      * @returns {boolean}
      */
-    public canAndOwns(permissions: StringOrStringArray, post: Post, options: RoleAndOwnsOptions):boolean {
-        return this.can(permissions) && this.owns(post, options.foreignKeyName);
+    public canAndOwns(permissions: StringOrStringArray, post: Post, options: RoleAndOwnsOptions = {
+        requireAll: false,
+        foreignKeyName: 'user_id'
+    }):boolean {
+        return this.can(permissions, options.requireAll) && this.owns(post, options.foreignKeyName);
     }
 
     /**

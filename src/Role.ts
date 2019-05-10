@@ -7,6 +7,11 @@ import { hasPermission } from './Util';
 
 class Role {
 
+    /**
+     *
+     * @param {string} role
+     * @param {string[]} permissions
+     */
     constructor(public role: string, public permissions: string[]) {}
 
 
