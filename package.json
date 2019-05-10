@@ -1,5 +1,5 @@
 {
-  "name": "access.control",
+  "name": "@lywzx/access.control",
   "version": "1.0.0",
   "description": "js access control",
   "main": "dist/index.js",
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
+    "@types/lodash": "^4.14.123",
     "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.2.0",
@@ -37,7 +38,6 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.123",
     "lodash": "^4.17.11"
   }
 }
