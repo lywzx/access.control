@@ -1,3 +1,3 @@
 export interface Post {
-    [s: string]: any
+  [s: string]: any
 }
