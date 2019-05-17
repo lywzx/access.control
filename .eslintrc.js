@@ -17,7 +17,7 @@ module.exports = {
   },
   rules: {
     'semi': 2,
-    'object-curly-newline': 'off', // Incompatible with prettier
+    'object-curly-newline': 1, // Incompatible with prettier
     'quotes': ['error', 'single'],
     '@typescript-eslint/interface-name-prefix': 1,
     '@typescript-eslint/no-explicit-any': 'off',
