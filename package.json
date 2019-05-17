@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha --reporter spec",
     "build": "tsc",
-    "lint": "eslint . --fix",
+    "lint": "eslint src --ext .ts --fix",
     "document": "typedoc --out docs src"
   },
   "keywords": [

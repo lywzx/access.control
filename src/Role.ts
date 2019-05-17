@@ -1,20 +1,13 @@
-import {
-  isString,
-  every,
-  some
-} from 'lodash';
+import { isString, every, some } from 'lodash';
 import { hasPermission } from './Util';
 
 class Role {
-
   /**
    *
    * @param {string} role
    * @param {string[]} permissions
    */
-  constructor(public role: string, public permissions: string[]) {
-  }
-
+  public constructor(public role: string, public permissions: string[]) {}
 
   /**
    *
@@ -39,10 +32,8 @@ class Role {
       permissions = permission;
     }
 
-    return (requiredAll ? every : some)(permissions, (permission) => hasPermission(this.permissions, permission));
+    return (requiredAll ? every : some)(permissions, permission => hasPermission(this.permissions, permission));
   }
-
-
 }
 
 export default Role;

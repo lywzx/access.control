@@ -1,6 +1,6 @@
 export interface Options {
-  validate_all: boolean;
+  validateAll: boolean;
   requireAll: boolean;
   foreignKeyName: string;
-  return_type: 'boolean' | 'array' | 'both';
+  returnType: 'boolean' | 'array' | 'both';
 }
