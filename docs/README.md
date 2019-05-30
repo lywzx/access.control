@@ -55,4 +55,3 @@
 
     user.owns({id: 1, title: '新闻标题', user_id: 1});
     
-

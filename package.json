@@ -1,15 +1,45 @@
 {
-  "name": "access.control",
-  "version": "1.0.0",
+  "name": "@lywzx/access.control",
+  "version": "1.0.2",
   "description": "js access control",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --reporter spec",
+    "build": "tsc",
+    "lint": "eslint src --ext .ts --fix",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
   "keywords": [
     "access",
-    "control"
+    "control",
+    "typescript"
   ],
-  "author": "",
-  "license": "MIT"
+  "author": {
+    "name": "liuyang",
+    "email": "liu88yang889@163.com"
+  },
+  "bugs": {
+    "url": "https://github.com/lywzx/access.control/issues"
+  },
+  "homepage": "https://github.com/lywzx/access.control#readme",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/lodash": "^4.14.123",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "mocha": "^6.1.4",
+    "prettier": "^1.17.0",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.4.5",
+    "vuepress": "^0.14.11"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11"
+  }
 }
