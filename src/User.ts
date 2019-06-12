@@ -7,7 +7,7 @@ import {
   StringArray,
   StringOrStringArray,
 } from './types/Types';
-import { isString, some, every } from 'lodash';
+import { isString, some, every } from 'lodash-es';
 import { getRole, hasPermission, standardize } from './Util';
 import { Post } from './types/Post';
 
