@@ -1,4 +1,6 @@
-import { isString, every, some } from 'lodash-es';
+import isString from 'lodash-es/isString';
+import every from 'lodash-es/every';
+import some from 'lodash-es/some';
 import { hasPermission } from './Util';
 
 class Role {
