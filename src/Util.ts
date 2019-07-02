@@ -6,7 +6,7 @@ import flatten from 'lodash-es/flatten';
 import trim from 'lodash-es/trim';
 import { RoleTypes, StringArray, StringOrStringArray } from './types/Types';
 import Role from './Role';
-import { Role as RoleType } from './types/Role';
+import { RoleTypes as RoleType } from './types/RoleTypes';
 
 /**
  *

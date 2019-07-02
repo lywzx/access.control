@@ -11,7 +11,7 @@ import isString from 'lodash-es/isString';
 import every from 'lodash-es/every';
 import some from 'lodash-es/some';
 import { getRole, hasPermission, standardize } from './Util';
-import { Post } from './types/Post';
+import { PostTypes } from './types/PostTypes';
 
 type abilityReturn =
   | boolean
@@ -100,11 +100,11 @@ class User {
   }
 
   /**
-   * @param {Post} post
+   * @param {PostTypes} post
    * @param {string} key
    * @returns {boolean}
    */
-  public owns(post: Post, key: string = 'user_id'): boolean {
+  public owns(post: PostTypes, key: string = 'user_id'): boolean {
     return post[key] === this._userId;
   }
 
@@ -166,13 +166,13 @@ class User {
   /**
    *
    * @param {StringOrStringArray} permissions
-   * @param {Post} post
+   * @param {PostTypes} post
    * @param {RoleAndOwnsOptions} options
    * @returns {boolean}
    */
   public canAndOwns(
     permissions: StringOrStringArray,
-    post: Post,
+    post: PostTypes,
     options: RoleAndOwnsOptions = {
       requireAll: false,
       foreignKeyName: 'user_id',
@@ -184,13 +184,13 @@ class User {
   /**
    *
    * @param {StringOrStringArray} roles
-   * @param {Post} post
+   * @param {PostTypes} post
    * @param {RoleAndOwnsOptions} options
    * @returns {boolean}
    */
   public hasRoleAndOwns(
     roles: StringOrStringArray,
-    post: Post,
+    post: PostTypes,
     options: RoleAndOwnsOptions = {
       requireAll: false,
       foreignKeyName: 'user_id',

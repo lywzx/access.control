@@ -3,9 +3,17 @@
     "target": "es5",
     "module": "commonjs",
     "declaration": true,
+    "declarationDir": "./dist/typings",
     "outDir": "./dist",
     "strict": true
   },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
   "typedocOptions": {
     "mode": "modules",
     "out": "apidocs"

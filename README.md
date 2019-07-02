@@ -1,6 +1,6 @@
 # 介绍
 
-`access.control`是基于传统的RBAC(Role base Access Control)的权限验证库，同时也主要侧重于权限的验证功能。由于是最纯粹的验证逻辑，所以与平台无关，适用于NodeJs及Browser端。
+`access.control`是基于传统的RBAC(RoleTypes base Access Control)的权限验证库，同时也主要侧重于权限的验证功能。由于是最纯粹的验证逻辑，所以与平台无关，适用于NodeJs及Browser端。
 
 # 快速上手
 
@@ -10,7 +10,7 @@
     yarn add @lywzx/access.control # 或者：npm install @lywzx/vue.access.control
 
 ## 使用示例
-    import { User, Role } from '@lywzx/access.control';
+    import { User, RoleTypes } from '@lywzx/access.control';
 
     let user = new User([
             'Administrator',
