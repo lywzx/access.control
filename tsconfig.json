@@ -6,7 +6,8 @@
     "declarationDir": "./dist/typings",
     "outDir": "./dist",
     "strict": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*"

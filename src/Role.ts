@@ -1,4 +1,4 @@
-import { hasPermission } from './Util';
+import { hasPermission } from './Util/hasPermission';
 import isString from 'lodash/isString';
 import every from 'lodash/every';
 import some from 'lodash/some';

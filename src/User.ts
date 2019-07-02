@@ -10,7 +10,9 @@ import {
 import isString from 'lodash/isString';
 import every from 'lodash/every';
 import some from 'lodash/some';
-import { getRole, hasPermission, standardize } from './Util';
+import { getRole } from './Util/getRole';
+import { hasPermission } from './Util/hasPermission';
+import { standardize } from './Util/standardize';
 import { PostTypes } from './types/PostTypes';
 
 type abilityReturn =

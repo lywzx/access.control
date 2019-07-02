@@ -1,11 +1,11 @@
 {
   "name": "@lywzx/access.control",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "js access control",
   "main": "dist/index.js",
   "types": "dist/typings/index.d.ts",
   "scripts": {
-    "test": "mocha --reporter spec",
+    "test": "mocha --require ts-node/register test/*.ts test/**/*.ts",
     "build": "tsc",
     "lint": "eslint src --ext .ts --fix",
     "docs:dev": "vuepress dev docs",
@@ -26,15 +26,18 @@
   "homepage": "https://github.com/lywzx/access.control#readme",
   "license": "MIT",
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/lodash": "^4.14.135",
+    "@types/mocha": "^5.2.7",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
-    "@types/lodash": "^4.14.135",
     "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.2.0",
     "eslint-plugin-prettier": "^3.0.1",
     "mocha": "^6.1.4",
     "prettier": "^1.17.0",
+    "ts-node": "^8.3.0",
     "typedoc": "^0.14.2",
     "typescript": "^3.4.5",
     "vuepress": "^1.0.1"

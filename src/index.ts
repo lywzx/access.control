@@ -1,5 +1,7 @@
 import Role from './Role';
 import User from './User';
-import * as Util from './Util';
+import { getRole } from './Util/getRole';
+import { hasPermission } from './Util/hasPermission';
+import { standardize } from './Util/standardize';
 
-export { Role, User, Util };
+export { Role, User, getRole, hasPermission, standardize };
