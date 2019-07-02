@@ -1,4 +1,4 @@
-import { Role as RoleType } from './Role';
+import { RoleTypes as RoleType } from './RoleTypes';
 import Role from '../Role';
 import { Options } from './Options';
 
