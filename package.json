@@ -1,6 +1,6 @@
 {
   "name": "@lywzx/access.control",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "js access control",
   "main": "dist/index.js",
   "types": "dist/typings/index.d.ts",
@@ -26,9 +26,9 @@
   "homepage": "https://github.com/lywzx/access.control#readme",
   "license": "MIT",
   "devDependencies": {
-    "@types/lodash-es": "^4.17.3",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
+    "@types/lodash": "^4.14.135",
     "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.2.0",
@@ -40,6 +40,6 @@
     "vuepress": "^1.0.1"
   },
   "dependencies": {
-    "lodash-es": "^4.17.11"
+    "lodash": "^4.17.11"
   }
 }

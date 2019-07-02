@@ -5,7 +5,8 @@
     "declaration": true,
     "declarationDir": "./dist/typings",
     "outDir": "./dist",
-    "strict": true
+    "strict": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*"

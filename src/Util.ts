@@ -1,9 +1,9 @@
-import isString from 'lodash-es/isString';
-import some from 'lodash-es/some';
-import isObject from 'lodash-es/isObject';
-import isArray from 'lodash-es/isArray';
-import flatten from 'lodash-es/flatten';
-import trim from 'lodash-es/trim';
+import isString from 'lodash/isString';
+import some from 'lodash/some';
+import isObject from 'lodash/isObject';
+import isArray from 'lodash/isArray';
+import flatten from 'lodash/flatten';
+import trim from 'lodash/trim';
 import { RoleTypes, StringArray, StringOrStringArray } from './types/Types';
 import Role from './Role';
 import { RoleTypes as RoleType } from './types/RoleTypes';
