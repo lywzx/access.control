@@ -8,7 +8,7 @@
 
 ```sh
 # 安装
-yarn add @lywzx/access.control # 或者：npm install @lywzx/vue.access.control
+yarn add @lywzx/access.control # 或者：npm install @lywzx/access.control
 ```
 
 ## 使用示例
