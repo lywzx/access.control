@@ -10,7 +10,9 @@
     "lint": "eslint src --ext .ts --fix",
     "format": "prettier --write \"+(src|scripts)/**/*.ts\"",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:build": "vuepress build docs",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [
     "access",
@@ -44,6 +46,8 @@
     "vuepress": "^1.4.1"
   },
   "dependencies": {
-    "lodash": "^4.17.15"
-  }
+    "lodash": "^4.17.15",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
